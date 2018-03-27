@@ -207,16 +207,16 @@ namespace Kinect2Sample
                         {
                             DiscreteGestureResult result = null;
                             discreteResults.TryGetValue(gesture, out result);
-
-                            if (result.Confidence > 0 && gesture.GestureType == GestureType.Discrete)  //gesture.Name.Equals(this.crossedArms)
+                            if (result != null)
                             {
-                               
-                                    System.Diagnostics.Debug.WriteLine(gesture.Name);
-                                
-                                if (result != null)
+                                if (result.Confidence > 0 && gesture.GestureType == GestureType.Discrete)  //gesture.Name.Equals(this.crossedArms)
                                 {
                                     // update the GestureResultView object with new gesture result values
                                     this.GestureResultView.UpdateGestureResult(gesture.Name,true, result.Detected, result.Confidence);
+                                }
+                                if (result.Confidence < 0.15)
+                                {
+                                    this.GestureResultView.UpdateGestureResult(gesture.Name, true, result.Detected, 0);
                                 }
                             }
                             

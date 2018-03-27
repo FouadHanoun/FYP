@@ -541,11 +541,11 @@ namespace Kinect2Sample
 
             switch (result.GestureName) {
                 case "CrossedArms":
-                    this.GestureVisual0.Text = result.GestureName + " " + result.Confidence;
+                     this.GestureVisual0.Text = result.GestureName + ": " + result.Confidence;
                //     this.GestureVisual0.Opacity = result.Confidence;
                     break;
                 case "HandsBehindHead":
-                    this.GestureVisual1.Text = result.GestureName + " " + result.Confidence;
+                     this.GestureVisual1.Text = result.GestureName + " " + result.Confidence;
                   //  this.GestureVisual1.Opacity = result.Confidence;
                     break;
                 case "HeadOnHand":
