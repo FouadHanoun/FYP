@@ -35,6 +35,9 @@ namespace Kinect2Sample
     public sealed partial class MainPage : Page, INotifyPropertyChanged
 
     {
+        private double[] features = new double[3];
+
+
         private const DisplayFrameType DEFAULT_DISPLAYFRAMETYPE = DisplayFrameType.Infrared;
         private FrameDescription currentFrameDescription;
         private DisplayFrameType currentDisplayFrameType;
@@ -539,27 +542,41 @@ namespace Kinect2Sample
             this.GestureVisual2.Opacity = 1;
             this.GestureVisual3.Opacity = 1;
 
-            switch (result.GestureName) {
-                case "CrossedArms":
-                     this.GestureVisual0.Text = result.GestureName + ": " + result.Confidence;
+           
+
+                switch (result.GestureName) {
+                case "HeadBentForward":
+                     this.GestureVisual0.Text =  result.GestureName + ": " + result.Confidence;
+                    features[0] = result.Confidence;
                //     this.GestureVisual0.Opacity = result.Confidence;
                     break;
-                case "HandsBehindHead":
-                     this.GestureVisual1.Text = result.GestureName + " " + result.Confidence;
-                  //  this.GestureVisual1.Opacity = result.Confidence;
+                case "SpineForward":
+                     this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence;
+                    features[1] = result.Confidence;
+
+                    //  this.GestureVisual1.Opacity = result.Confidence;
                     break;
-                case "HeadOnHand":
-                    this.GestureVisual2.Text = result.GestureName + " " + result.Confidence;
-                //    this.GestureVisual2.Opacity = result.Confidence;
+                case "ArmsAtTrunk":
+                    this.GestureVisual2.Text =  result.GestureName + ": " + result.Confidence;
+                    features[2] = result.Confidence;
+                    //    this.GestureVisual2.Opacity = result.Confidence;
                     break;
                 case "HandsOnKnees":
-                    this.GestureVisual3.Text = result.GestureName + " " + result.Confidence;
-                //    this.GestureVisual3.Opacity = result.Confidence;
+                    this.GestureVisual3.Text = result.GestureName + ": " + result.Confidence;
+                    //    this.GestureVisual3.Opacity = result.Confidence;
                     break;
             }
+
+            detectTest(features);
         
         }
 
+        void detectTest(double[] f)
+        {
+            double moyenne = (f[0] + f[1] + f[2]) / 3;
+            double pourcent = moyenne * 100;
+            this.GestureVisual3.Text = "You are " + pourcent + " % sad.";
+        }
         async private void Work()
         {
             // Thread protetction on FileIO actions

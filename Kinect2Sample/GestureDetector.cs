@@ -24,13 +24,15 @@ namespace Kinect2Sample
 
         //important lab 13
         /// <summary> Path to the gesture database that was trained with VGB </summary>
-        private readonly string gestureDatabase = @"Database\Gestures.gbd";
-        private readonly string gestureDatabase2 = @"Database\Crossed Arms.gbd";
+        /// 
+      //  private readonly string gestureDatabase = @"Database\Gestures.gbd";
+        private readonly string gestureDatabase = @"Database\Sad.gbd";
         //important lab 13
         /// <summary> Name of the discrete gesture in the database that we want to track </summary>
         /// 
-        private readonly string crossedArms = "CrossedArms";
-        private readonly string handsBehindHead = "HandsBehindHead";
+
+       // private readonly string crossedArms = "CrossedArms";
+       // private readonly string handsBehindHead = "HandsBehindHead";
 
         /// <summary> Gesture frame source which should be tied to a body tracking ID </summary>
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
@@ -211,6 +213,7 @@ namespace Kinect2Sample
                             {
                                 if (result.Confidence > 0 && gesture.GestureType == GestureType.Discrete)  //gesture.Name.Equals(this.crossedArms)
                                 {
+                                    System.Diagnostics.Debug.WriteLine(vgbFrameSource.TrackingId);
                                     // update the GestureResultView object with new gesture result values
                                     this.GestureResultView.UpdateGestureResult(gesture.Name,true, result.Detected, result.Confidence);
                                 }

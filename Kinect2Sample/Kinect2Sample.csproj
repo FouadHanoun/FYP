@@ -150,6 +150,9 @@
     <Content Include="Database\Crossed Arms.gbd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Database\Sad.gbd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Kinect2Sample_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
