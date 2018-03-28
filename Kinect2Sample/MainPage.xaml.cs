@@ -36,7 +36,7 @@ namespace Kinect2Sample
 
     {
         private double[] features = new double[3];
-
+        Sadness s = new Sadness();
 
         private const DisplayFrameType DEFAULT_DISPLAYFRAMETYPE = DisplayFrameType.Infrared;
         private FrameDescription currentFrameDescription;
@@ -546,44 +546,22 @@ namespace Kinect2Sample
 
                 switch (result.GestureName) {
                 case "HeadBentForward":
-                     this.GestureVisual0.Text =  result.GestureName + ": " + result.Confidence;
-                    features[0] = result.Confidence;
-               //     this.GestureVisual0.Opacity = result.Confidence;
+                     this.GestureVisual0.Text =  result.GestureName + ": " + result.Confidence.ToString("0.000");
+                     s.set_headForward(result.Confidence);
                     break;
                 case "SpineForward":
-                     this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence;
-                    features[1] = result.Confidence;
-
-                    //  this.GestureVisual1.Opacity = result.Confidence;
-                    break;
-                case "ArmsAtTrunk":
-                    this.GestureVisual2.Text =  result.GestureName + ": " + result.Confidence;
-                    features[2] = result.Confidence;
-                    //    this.GestureVisual2.Opacity = result.Confidence;
-                    break;
-                case "HandsOnKnees":
-                    this.GestureVisual3.Text = result.GestureName + ": " + result.Confidence;
-                    //    this.GestureVisual3.Opacity = result.Confidence;
-                    break;
+                     this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
+                     s.set_SpineForward(result.Confidence);
+                     break;
             }
 
-            detectTest(features);
-        
+            this.GestureVisual2.Text = "Collapsed body: " + s.get_collapsedBody().ToString("0.000");
+            this.GestureVisual3.Text = "You are " + s.get_Sadness() + " % sad.";
+
         }
 
-        void detectTest(double[] f)
-        {
-            double moyenne = (f[0] + f[1] + f[2]) / 3;
-            int pourcent = (int)moyenne * 100;
-            this.GestureVisual3.Text = "You are " + pourcent + " % sad.";
-        }
-        async private void Work()
-        {
-            // Thread protetction on FileIO actions
-            
-        }
-
-
+       
+       
 
         private void Sensor_IsAvailableChanged(KinectSensor sender, IsAvailableChangedEventArgs args)
         {

@@ -213,7 +213,7 @@ namespace Kinect2Sample
                             {
                                 if (result.Confidence > 0 && gesture.GestureType == GestureType.Discrete)  //gesture.Name.Equals(this.crossedArms)
                                 {
-                                    System.Diagnostics.Debug.WriteLine(vgbFrameSource.TrackingId);
+                                   // System.Diagnostics.Debug.WriteLine(vgbFrameSource.TrackingId);
                                     // update the GestureResultView object with new gesture result values
                                     this.GestureResultView.UpdateGestureResult(gesture.Name,true, result.Detected, result.Confidence);
                                 }

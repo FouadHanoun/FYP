@@ -112,7 +112,7 @@
             </TextBlock>
             <TextBlock x:Name="GestureVisual2"
 	            Grid.Row="1"
-	            Text="Hands on Trunk"
+	            Text="Collapsed Body"
                 Margin="0 60 0 0 " 
 	            FontSize="30"
 	            Foreground="White"
