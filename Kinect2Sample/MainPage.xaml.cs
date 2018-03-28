@@ -574,7 +574,7 @@ namespace Kinect2Sample
         void detectTest(double[] f)
         {
             double moyenne = (f[0] + f[1] + f[2]) / 3;
-            double pourcent = moyenne * 100;
+            int pourcent = (int)moyenne * 100;
             this.GestureVisual3.Text = "You are " + pourcent + " % sad.";
         }
         async private void Work()
