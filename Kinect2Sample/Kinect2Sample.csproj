@@ -154,6 +154,7 @@
     <Content Include="Database\Sad.gbd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="test.txt" />
     <None Include="Kinect2Sample_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

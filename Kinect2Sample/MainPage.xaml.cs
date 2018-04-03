@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
@@ -21,6 +20,9 @@ using Windows.Storage.Pickers;
 using Windows.Graphics.Imaging;
 using Windows.Graphics.Display;
 using Windows.Storage;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Kinect2Sample
 {
@@ -383,6 +385,9 @@ namespace Kinect2Sample
 
         public MainPage()
         {
+
+            CreateFolder();
+
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
@@ -533,7 +538,42 @@ namespace Kinect2Sample
             }
         }
 
-        void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
+
+        public async Task CreateFolder()
+        {
+            try
+            {
+                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Test Folder",CreationCollisionOption.OpenIfExists);
+                StorageFile testFile = await storageFolder.CreateFileAsync("sample.txt", CreationCollisionOption.OpenIfExists);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("createfolder: "+ex.ToString());
+            }
+        }
+
+        public async Task log(string GestureName, string Confidence)
+        {
+            SemaphoreSlim sem = new SemaphoreSlim(1);
+            try
+            {
+                await sem.WaitAsync();
+                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Test Folder");
+                StorageFile testFile = await storageFolder.GetFileAsync("sample.txt");
+                await FileIO.AppendTextAsync(testFile, GestureName + " " + Confidence + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                sem.Release();
+            }
+        }
+    
+
+        private async void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             GestureResultView result = sender as GestureResultView;
 
@@ -542,26 +582,41 @@ namespace Kinect2Sample
             this.GestureVisual2.Opacity = 1;
             this.GestureVisual3.Opacity = 1;
 
-           
+            
 
-                switch (result.GestureName) {
+            switch (result.GestureName)
+            {
                 case "HeadBentForward":
-                     this.GestureVisual0.Text =  result.GestureName + ": " + result.Confidence.ToString("0.000");
-                     s.set_headForward(result.Confidence);
+                    this.GestureVisual0.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
+                    s.set_headForward(result.Confidence);
+                    await log( result.GestureName, result.Confidence.ToString("0.000"));
+                     
                     break;
+
                 case "SpineForward":
-                     this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
-                     s.set_SpineForward(result.Confidence);
-                     break;
+                    this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
+                    s.set_SpineForward(result.Confidence);
+                    await log(result.GestureName, result.Confidence.ToString("0.000"));
+                    break;
             }
 
             this.GestureVisual2.Text = "Collapsed body: " + s.get_collapsedBody().ToString("0.000");
+            await log("Collapsed body:", s.get_collapsedBody().ToString("0.000"));
             this.GestureVisual3.Text = "You are " + s.get_Sadness() + " % sad.";
+            await log("SADNESS:", s.get_Sadness() + " %");
+
+            await Task.Delay(TimeSpan.FromSeconds(1000));
 
         }
 
-       
-       
+        // Any and all directories specified in path are created, unless they already exist or unless
+        // some part of path is invalid. If the directory already exists, this method does not create a new directory.
+        // The path parameter specifies a directory path, not a file path, and it must be in the ApplicationData domain.
+        // Trailing spaces are removed from the end of the path parameter before creating the directory.
+
+
+
+
 
         private void Sensor_IsAvailableChanged(KinectSensor sender, IsAvailableChangedEventArgs args)
         {
