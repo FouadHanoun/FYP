@@ -40,6 +40,7 @@ namespace Kinect2Sample
         private double[] features = new double[3];
         Sadness s = new Sadness();  //instance de l'emotion
         SemaphoreSlim sem = new SemaphoreSlim(1);  //semaphore pr l'ecriture
+        DateTime CurrentDate = DateTime.Now; //reference for the timestamps
 
         private const DisplayFrameType DEFAULT_DISPLAYFRAMETYPE = DisplayFrameType.Infrared;
         private FrameDescription currentFrameDescription;
@@ -555,14 +556,17 @@ namespace Kinect2Sample
             }
         }
 
-       
+              
         public async Task log()
         {
             await sem.WaitAsync();
+            TimeSpan timestamp = DateTime.Now - CurrentDate;
+
             try
             {
                 StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Test Folder");
                 StorageFile testFile = await storageFolder.GetFileAsync("sample.txt");
+                await FileIO.AppendTextAsync(testFile, timestamp.ToString() + Environment.NewLine);
                 await FileIO.AppendTextAsync(testFile,"HeadBentForward "+ s.get_HeadForward().ToString("0.000") + Environment.NewLine);
                 await FileIO.AppendTextAsync(testFile, "SpineForward " + s.get_SpineForward().ToString("0.000") + Environment.NewLine);
                 await FileIO.AppendTextAsync(testFile, "CollapsedBody " + s.get_collapsedBody().ToString("0.000") + Environment.NewLine);
