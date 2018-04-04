@@ -769,10 +769,12 @@ namespace Kinect2Sample
                             this.gestureDetectorList[i].IsPaused = trackingId == 0;
                         }
                     }
+
                     log("HeadBentForward", s.get_HeadForward().ToString("0.000"));
                     log("SpineForward", s.get_SpineForward().ToString("0.000"));
                     log("Collapsed body:", s.get_collapsedBody().ToString("0.000"));
                     log("SADNESS:", s.get_Sadness() + " %");
+
                 }
             }
         }
