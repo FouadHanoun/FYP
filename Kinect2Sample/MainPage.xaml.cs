@@ -551,30 +551,33 @@ namespace Kinect2Sample
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("createfolder: "+ex.ToString());
+                System.Diagnostics.Debug.WriteLine("Error 11: Failed to create folder: " + ex.ToString());
             }
         }
 
        
-        public async Task log(string GestureName, string Confidence)
+        public async Task log()
         {
             await sem.WaitAsync();
             try
             {
                 StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Test Folder");
                 StorageFile testFile = await storageFolder.GetFileAsync("sample.txt");
-                await FileIO.AppendTextAsync(testFile, GestureName + " " + Confidence + Environment.NewLine);
+                await FileIO.AppendTextAsync(testFile,"HeadBentForward "+ s.get_HeadForward().ToString("0.000") + Environment.NewLine);
+                await FileIO.AppendTextAsync(testFile, "SpineForward " + s.get_SpineForward().ToString("0.000") + Environment.NewLine);
+                await FileIO.AppendTextAsync(testFile, "CollapsedBody " + s.get_collapsedBody().ToString("0.000") + Environment.NewLine);
+                await FileIO.AppendTextAsync(testFile, "SADNESS " + s.get_Sadness()+ " %" + Environment.NewLine);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                System.Diagnostics.Debug.WriteLine("Error 10 - Writing on file " + ex.ToString());
             }
             finally
             {
                 sem.Release();
             }
         }
-    
+        
 
         private async void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -602,26 +605,15 @@ namespace Kinect2Sample
 
             this.GestureVisual2.Text = "Collapsed body: " + s.get_collapsedBody().ToString("0.000");
             this.GestureVisual3.Text = "You are " + s.get_Sadness() + " % sad.";
-
             
-
         }
 
-        // Any and all directories specified in path are created, unless they already exist or unless
-        // some part of path is invalid. If the directory already exists, this method does not create a new directory.
-        // The path parameter specifies a directory path, not a file path, and it must be in the ApplicationData domain.
-        // Trailing spaces are removed from the end of the path parameter before creating the directory.
-
-
-
-
-
+        //Checks if the Kinect is connected
         private void Sensor_IsAvailableChanged(KinectSensor sender, IsAvailableChangedEventArgs args)
         {
             this.StatusText = this.kinectSensor.IsAvailable ?
                  "Running" : "Not Available";
         }
-
 
         private void SetupCurrentDisplay(DisplayFrameType newDisplayFrameType)
         {
@@ -641,6 +633,7 @@ namespace Kinect2Sample
 
             switch (currentDisplayFrameType)
             {
+                //if the Infrared button is clicked
                 case DisplayFrameType.Infrared:
                     FrameDescription infraredFrameDescription = this.kinectSensor.InfraredFrameSource.FrameDescription;
                     this.CurrentFrameDescription = infraredFrameDescription;
@@ -651,6 +644,7 @@ namespace Kinect2Sample
                     this.bitmap = new WriteableBitmap(infraredFrameDescription.Width,infraredFrameDescription.Height);
                     break;
 
+                //if the Color button is clicked
                 case DisplayFrameType.Color:
                     colorFrameDescription = this.kinectSensor.ColorFrameSource.FrameDescription;
                     this.CurrentFrameDescription = colorFrameDescription;
@@ -658,6 +652,7 @@ namespace Kinect2Sample
                     this.bitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height);
                     break;
 
+                //if the Depth button is clicked
                 case DisplayFrameType.Depth:
                     FrameDescription depthFrameDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
                     this.CurrentFrameDescription = depthFrameDescription;
@@ -668,6 +663,7 @@ namespace Kinect2Sample
                     this.bitmap = new WriteableBitmap(depthFrameDescription.Width, depthFrameDescription.Height);
                     break;
 
+                //if the Body Mask button is clicked
                 case DisplayFrameType.BodyMask:
                     colorFrameDescription = this.kinectSensor.ColorFrameSource.FrameDescription;
                     this.CurrentFrameDescription = colorFrameDescription;
@@ -677,7 +673,7 @@ namespace Kinect2Sample
                     break;
 
 
-
+                //if the Joint button is clicked
                 case DisplayFrameType.BodyJoints:
                     // instantiate a new Canvas
                     this.drawingCanvas = new Canvas();
@@ -693,36 +689,45 @@ namespace Kinect2Sample
                     this.BodyJointsGrid.Children.Add(this.drawingCanvas);
                     bodiesManager = new BodiesManager(this.coordinateMapper, this.drawingCanvas, this.kinectSensor.BodyFrameSource.BodyCount);
                     break;
+
                 default:
                     break;
             }
         }
+
+        //Choosing the Infrared view option
         private void InfraredButton_Click(object sender, RoutedEventArgs e)
         {
             SetupCurrentDisplay(DisplayFrameType.Infrared);
         }
 
+        //Choosing the Color view option
         private void ColorButton_Click(object sender, RoutedEventArgs e)
         {
             SetupCurrentDisplay(DisplayFrameType.Color);
         }
-
+        
+        //Choosing the Depth view option
         private void DepthButton_Click(object sender, RoutedEventArgs e)
         {
             SetupCurrentDisplay(DisplayFrameType.Depth);
         }
 
+        //Choosing the Body masking option (isolating the body)
         private void BodyMask_Click(object sender, RoutedEventArgs e)
         {
             SetupCurrentDisplay(DisplayFrameType.BodyMask);
         }
 
+        //Choosing the Skeletal view option
         private void BodyJointsButton_Click(object sender, RoutedEventArgs e)
         {
             SetupCurrentDisplay(DisplayFrameType.BodyJoints);
         }
 
-        private void RegisterGesture(BodyFrame bodyFrame)
+
+        //Register the detected gesture + logs each gesture
+        private async void RegisterGesture(BodyFrame bodyFrame)
         {
             bool dataReceived = false;
             Body[] bodies = null;
@@ -731,28 +736,22 @@ namespace Kinect2Sample
             {
                 if (bodies == null)
                 {
-                    // Creates an array of 6 bodies, which is the max 
-                    // number of bodies the Kinect can track simultaneously
+                    // Creates an array of 6 bodies, which is the max number of bodies the Kinect can track simultaneously
                     bodies = new Body[bodyFrame.BodyCount];
                 }
 
-                // The first time GetAndRefreshBodyData is called, 
-                // allocate each Body in the array.
-                // As long as those body objects are not disposed and 
-                // not set to null in the array,
-                // those body objects will be re-used.
+                // The first time GetAndRefreshBodyData is called, allocate each Body in the array.
+                // As long as those body objects are not disposed and not set to null in the array, those body objects will be re-used.
                 bodyFrame.GetAndRefreshBodyData(bodies);
                 dataReceived = true;
             }
 
             if (dataReceived)
             {
-                // We may have lost/acquired bodies, 
-                // so update the corresponding gesture detectors
+                // We may have lost/acquired bodies, so update the corresponding gesture detectors
                 if (bodies != null)
                 {
-                    // Loop through all bodies to see if any 
-                    // of the gesture detectors need to be updated
+                    // Loop through all bodies to see if any of the gesture detectors need to be updated
                     for (int i = 0; i < bodyFrame.BodyCount; ++i)
                     {
                         Body body = bodies[i];
@@ -770,10 +769,8 @@ namespace Kinect2Sample
                         }
                     }
 
-                    log("HeadBentForward", s.get_HeadForward().ToString("0.000"));
-                    log("SpineForward", s.get_SpineForward().ToString("0.000"));
-                    log("Collapsed body:", s.get_collapsedBody().ToString("0.000"));
-                    log("SADNESS:", s.get_Sadness() + " %");
+                    //logging in case there's a detected body
+                    await log();
 
                 }
             }
