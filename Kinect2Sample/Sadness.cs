@@ -17,6 +17,12 @@ namespace Kinect2Sample
             this.SpineForward = 0.0;
         }
 
+        public void set_SpineForward(double SpineForward)
+        {
+            this.SpineForward = SpineForward;
+        }
+
+
         public double get_collapsedBody()
         {
             return (HeadForward + SpineForward) / 2;
@@ -26,9 +32,14 @@ namespace Kinect2Sample
             this.HeadForward = HeadForward;
         }
 
-        public void set_SpineForward(double SpineForward)
+        public double get_HeadForward()
         {
-            this.SpineForward = SpineForward;
+            return HeadForward;
+        }
+
+        public double get_SpineForward()
+        {
+            return SpineForward;
         }
 
         public int get_Sadness()

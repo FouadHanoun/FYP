@@ -10,19 +10,19 @@
     <PackageArchitecture>x86</PackageArchitecture>
     <PackageIdentityName>a4548d07-af25-4b98-b7b4-ad4c4798fc82</PackageIdentityName>
     <PackageIdentityPublisher>CN=fouad.hannoun</PackageIdentityPublisher>
-    <IntermediateOutputPath>C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\obj\x86\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\obj\x86\Debug\</IntermediateOutputPath>
     <RemoteDeploymentType></RemoteDeploymentType>
     <PackageRegistrationPath></PackageRegistrationPath>
     <RemoveNonLayoutFiles>true</RemoveNonLayoutFiles>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\AppxManifest.xml">
+    <AppXManifest Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Kinect2Sample.exe">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Kinect2Sample.exe">
       <PackagePath>Kinect2Sample.exe</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.Kinect.Face\2.0\References\CommonConfiguration\neutral\Microsoft.Kinect.Face.winmd">
@@ -250,50 +250,47 @@
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\Windows\v8.1\ExtensionSDKs\Microsoft.Kinect.Xaml.Controls\2.0\Redist\CommonConfiguration\x86\Microsoft.Kinect.Xaml.Controls\SelectButtonPressingKinect.wav">
       <PackagePath>Microsoft.Kinect.Xaml.Controls\SelectButtonPressingKinect.wav</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\Database\Gestures.gbd">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\Database\Gestures.gbd">
       <PackagePath>Database\Gestures.gbd</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\Database\Crossed Arms.gbd">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\Database\Crossed Arms.gbd">
       <PackagePath>Database\Crossed Arms.gbd</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\Database\Sad.gbd">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\Database\Sad.gbd">
       <PackagePath>Database\Sad.gbd</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\test.txt">
-      <PackagePath>test.txt</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\Logo.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\Logo.scale-100.png">
       <PackagePath>Assets\Logo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\SmallLogo.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\SmallLogo.scale-100.png">
       <PackagePath>Assets\SmallLogo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\SplashScreen.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\SplashScreen.scale-100.png">
       <PackagePath>Assets\SplashScreen.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\StoreLogo.scale-100.png">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\Assets\StoreLogo.scale-100.png">
       <PackagePath>Assets\StoreLogo.scale-100.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Kinect2Sample.xr.xml">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Kinect2Sample.xr.xml">
       <PackagePath>Kinect2Sample.xr.xml</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\App.xbf">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\MainPage.xbf">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Microsoft.Kinect.Xaml.Controls\Themes\Generic.xbf">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Microsoft.Kinect.Xaml.Controls\Themes\Generic.xbf">
       <PackagePath>Microsoft.Kinect.Xaml.Controls\Themes\Generic.xbf</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Microsoft.Kinect.Xaml.Controls\SpriteSheet.xbf">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\Microsoft.Kinect.Xaml.Controls\SpriteSheet.xbf">
       <PackagePath>Microsoft.Kinect.Xaml.Controls\SpriteSheet.xbf</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\fouad.hannoun\Documents\Visual Studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\resources.pri">
+    <AppxPackagedFile Include="C:\Users\fouad.hannoun\documents\visual studio 2015\Projects\Kinect2Sample\Kinect2Sample\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
     </AppxPackagedFile>
   </ItemGroup>

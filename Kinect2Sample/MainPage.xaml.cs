@@ -38,7 +38,8 @@ namespace Kinect2Sample
 
     {
         private double[] features = new double[3];
-        Sadness s = new Sadness();
+        Sadness s = new Sadness();  //instance de l'emotion
+        SemaphoreSlim sem = new SemaphoreSlim(1);  //semaphore pr l'ecriture
 
         private const DisplayFrameType DEFAULT_DISPLAYFRAMETYPE = DisplayFrameType.Infrared;
         private FrameDescription currentFrameDescription;
@@ -422,6 +423,8 @@ namespace Kinect2Sample
                 result.PropertyChanged += GestureResult_PropertyChanged;
                 this.gestureDetectorList.Add(detector);
             }
+
+            
         }
 
         private void Reader_MultiSourceFrameArrived(MultiSourceFrameReader sender, MultiSourceFrameArrivedEventArgs e)
@@ -552,12 +555,12 @@ namespace Kinect2Sample
             }
         }
 
+       
         public async Task log(string GestureName, string Confidence)
         {
-            SemaphoreSlim sem = new SemaphoreSlim(1);
+            await sem.WaitAsync();
             try
             {
-                await sem.WaitAsync();
                 StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Test Folder");
                 StorageFile testFile = await storageFolder.GetFileAsync("sample.txt");
                 await FileIO.AppendTextAsync(testFile, GestureName + " " + Confidence + Environment.NewLine);
@@ -589,23 +592,18 @@ namespace Kinect2Sample
                 case "HeadBentForward":
                     this.GestureVisual0.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
                     s.set_headForward(result.Confidence);
-                    await log( result.GestureName, result.Confidence.ToString("0.000"));
-                     
                     break;
 
                 case "SpineForward":
                     this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
                     s.set_SpineForward(result.Confidence);
-                    await log(result.GestureName, result.Confidence.ToString("0.000"));
                     break;
             }
 
             this.GestureVisual2.Text = "Collapsed body: " + s.get_collapsedBody().ToString("0.000");
-            await log("Collapsed body:", s.get_collapsedBody().ToString("0.000"));
             this.GestureVisual3.Text = "You are " + s.get_Sadness() + " % sad.";
-            await log("SADNESS:", s.get_Sadness() + " %");
 
-            await Task.Delay(TimeSpan.FromSeconds(1000));
+            
 
         }
 
@@ -771,6 +769,10 @@ namespace Kinect2Sample
                             this.gestureDetectorList[i].IsPaused = trackingId == 0;
                         }
                     }
+                    log("HeadBentForward", s.get_HeadForward().ToString("0.000"));
+                    log("SpineForward", s.get_SpineForward().ToString("0.000"));
+                    log("Collapsed body:", s.get_collapsedBody().ToString("0.000"));
+                    log("SADNESS:", s.get_Sadness() + " %");
                 }
             }
         }
