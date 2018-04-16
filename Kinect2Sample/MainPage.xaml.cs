@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using WindowsPreview.Kinect;
 using Windows.UI.Xaml.Media.Imaging;
 using System.ComponentModel;
 using Windows.Storage.Streams;
 using System.Runtime.InteropServices;
-using Windows.Storage.Pickers;
-using Windows.Graphics.Imaging;
-using Windows.Graphics.Display;
 using Windows.Storage;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -39,6 +29,7 @@ namespace Kinect2Sample
     {
         private double[] features = new double[3];
         Sadness s = new Sadness();  //instance de l'emotion
+        private Dictionary<string, float> Features = new Dictionary<string, float>();
         SemaphoreSlim sem = new SemaphoreSlim(1);  //semaphore pr l'ecriture
         DateTime CurrentDate = DateTime.Now; //reference for the timestamps
 
@@ -73,37 +64,32 @@ namespace Kinect2Sample
         //Body Joints are drawn here
         private Canvas drawingCanvas;
 
-        //IR Variables
-        /// <summary>
-        /// The highest value that can be returned in the InfraredFrame.
-        /// It is cast to a float for readability in the visualization code.
-        /// </summary>
+
+        /// ** IR Variables **
+
+        // The highest value that can be returned in the InfraredFrame.
+        // It is cast to a float for readability in the visualization code.
         private const float InfraredSourceValueMaximum = (float)ushort.MaxValue;
 
-        /// </summary>
-        /// Used to set the lower limit, post processing, of the infrared data that we will render.
-        /// Increasing or decreasing this value sets a brightness "wall" either closer or further away.
-        /// </summary>
+
+        // Used to set the lower limit, post processing, of the infrared data that we will render.
+        // Increasing or decreasing this value sets a brightness "wall" either closer or further away.
         private const float InfraredOutputValueMinimum = 0.01f;
 
-        /// <summary>
-        /// The upper limit, post processing, of the
-        /// infrared data that will render.
-        /// </summary>
+
+        // The upper limit, post processing, of the infrared data that will render.
         private const float InfraredOutputValueMaximum = 1.0f;
 
-        /// <summary>
-        /// The InfraredSceneValueAverage value specifies the average infrared value of the scene. 
-        /// This value was selected by analyzing the average pixel intensity for a given scene.
-        /// This could be calculated at runtime to handle different IR conditions of a scene (outside vs inside).
-        /// </summary>
+
+        // The InfraredSceneValueAverage value specifies the average infrared value of the scene. 
+        // This value was selected by analyzing the average pixel intensity for a given scene.
+        // This could be calculated at runtime to handle different IR conditions of a scene (outside vs inside).
         private const float InfraredSceneValueAverage = 0.08f;
 
-        /// <summary>
-        /// The InfraredSceneStandardDeviations value specifies the number of standard deviations to apply to InfraredSceneValueAverage.
-        /// This value was selected by analyzing data from a given scene.
-        /// This could be calculated at runtime to handle different IR conditions of a scene (outside vs inside).
-        /// </summary>
+
+        // The InfraredSceneStandardDeviations value specifies the number of standard deviations to apply to InfraredSceneValueAverage.
+        // This value was selected by analyzing data from a given scene.
+        // This could be calculated at runtime to handle different IR conditions of a scene (outside vs inside).
         private const float InfraredSceneStandardDeviations = 3.0f;
 
 
@@ -262,7 +248,7 @@ namespace Kinect2Sample
                     this.bitmap.PixelWidth) &&
              (colorFrameDescription.Height == this.bitmap.PixelHeight))
                 {
-                            if (colorFrame.RawColorImageFormat == ColorImageFormat.Bgra)
+                    if (colorFrame.RawColorImageFormat == ColorImageFormat.Bgra)
                     {
                         colorFrame.CopyRawFrameDataToBuffer(
                             this.bitmap.PixelBuffer);
@@ -390,6 +376,25 @@ namespace Kinect2Sample
 
             CreateFolder();
 
+            Features.Add("HeadBackward", 0.0f);
+            Features.Add("HeadBentForward", 0.0f);
+            Features.Add("HeadOnHand_Left", 0.0f);
+            Features.Add("HeadOnHand_Right", 0.0f);
+            Features.Add("HandOnHead_Left", 0.0f);
+            Features.Add("HandOnHead_Right", 0.0f);
+            Features.Add("SpineForward", 0.0f);
+            Features.Add("SpineBackward", 0.0f);
+            Features.Add("ShouldersForward", 0.0f);
+            Features.Add("ShouldersRaised", 0.0f);
+            Features.Add("ArmsAtTrunk", 0.0f);
+            Features.Add("ArmsRaisedShoulder", 0.0f);
+            Features.Add("HandsOnKnees", 0.0f);
+            Features.Add("CrossedArms", 0.0f);
+            Features.Add("ArmsRaisedUp", 0.0f);
+            Features.Add("ArmsExtendedDown", 0.0f);
+            Features.Add("HandsBehindHead", 0.0f);
+            Features.Add("HandOnNeck_Left", 0.0f);
+            Features.Add("HandOnNeck_Right", 0.0f);
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
@@ -419,13 +424,13 @@ namespace Kinect2Sample
             int maxBodies = this.kinectSensor.BodyFrameSource.BodyCount;
             for (int i = 0; i < maxBodies; ++i)
             {
-                GestureResultView result = new GestureResultView("test",i, false, false, 0.0f);
+                GestureResultView result = new GestureResultView("test", i, false, false, 0.0f);
                 GestureDetector detector = new GestureDetector(this.kinectSensor, result);
                 result.PropertyChanged += GestureResult_PropertyChanged;
                 this.gestureDetectorList.Add(detector);
             }
 
-            
+
         }
 
         private void Reader_MultiSourceFrameArrived(MultiSourceFrameReader sender, MultiSourceFrameArrivedEventArgs e)
@@ -483,7 +488,7 @@ namespace Kinect2Sample
                         depthFrame = multiSourceFrame.DepthFrameReference.AcquireFrame();
                         bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame();
                         colorFrame = multiSourceFrame.ColorFrameReference.AcquireFrame();
-                        if ((depthFrame == null) || (colorFrame == null)|| (bodyIndexFrame == null))
+                        if ((depthFrame == null) || (colorFrame == null) || (bodyIndexFrame == null))
                         {
                             return;
                         }
@@ -495,7 +500,7 @@ namespace Kinect2Sample
                         colorFrame.CopyConvertedFrameDataToBuffer(this.bitmap.PixelBuffer, ColorImageFormat.Bgra);
                         // Access the body index frame data directly via LockImageBuffer to avoid making a copy
                         bodyIndexFrameData = bodyIndexFrame.LockImageBuffer();
-                        ShowMappedBodyFrame(depthFrame.FrameDescription.Width,depthFrame.FrameDescription.Height,bodyIndexFrameData, bodyIndexByteAccess);
+                        ShowMappedBodyFrame(depthFrame.FrameDescription.Width, depthFrame.FrameDescription.Height, bodyIndexFrameData, bodyIndexByteAccess);
 
                     }
                     finally
@@ -527,7 +532,7 @@ namespace Kinect2Sample
                             System.Runtime.InteropServices.Marshal.ReleaseComObject(bodyIndexByteAccess);
                         }
                     }
-                        break;
+                    break;
 
                 case DisplayFrameType.BodyJoints:
                     using (bodyFrame = multiSourceFrame.BodyFrameReference.AcquireFrame())
@@ -543,11 +548,12 @@ namespace Kinect2Sample
         }
 
 
+        //Creates the folder and the textfile needed for the logging
         public async Task CreateFolder()
         {
             try
             {
-                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Test Folder",CreationCollisionOption.OpenIfExists);
+                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Test Folder", CreationCollisionOption.OpenIfExists);
                 StorageFile testFile = await storageFolder.CreateFileAsync("sample.txt", CreationCollisionOption.OpenIfExists);
             }
             catch (Exception ex)
@@ -556,7 +562,7 @@ namespace Kinect2Sample
             }
         }
 
-              
+
         public async Task log()
         {
             await sem.WaitAsync();
@@ -566,11 +572,69 @@ namespace Kinect2Sample
             {
                 StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Test Folder");
                 StorageFile testFile = await storageFolder.GetFileAsync("sample.txt");
-                await FileIO.AppendTextAsync(testFile, timestamp.ToString() + Environment.NewLine);
-                await FileIO.AppendTextAsync(testFile,"HeadBentForward "+ s.get_HeadForward().ToString("0.000") + Environment.NewLine);
-                await FileIO.AppendTextAsync(testFile, "SpineForward " + s.get_SpineForward().ToString("0.000") + Environment.NewLine);
-                await FileIO.AppendTextAsync(testFile, "CollapsedBody " + s.get_collapsedBody().ToString("0.000") + Environment.NewLine);
-                await FileIO.AppendTextAsync(testFile, "SADNESS " + s.get_Sadness()+ " %" + Environment.NewLine);
+                var stream = await testFile.OpenAsync(FileAccessMode.ReadWrite);
+                try
+                {
+
+                    using (var outputStream = stream.GetOutputStreamAt(stream.Size)) 
+                    {
+                        using (var dataWriter = new DataWriter(outputStream))
+                        {
+                            dataWriter.WriteString(timestamp.ToString() + Environment.NewLine);
+                            dataWriter.WriteString("HeadBackward" + " " + Features["HeadBackward"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HeadBentForward" + " " + Features["HeadBentForward"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HeadOnHand_Left" + " " + Features["HeadOnHand_Left"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HeadOnHand_Right" + " " + Features["HeadOnHand_Right"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HandOnHead_Left" + " " + Features["HandOnHead_Left"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HandOnHead_Right" + " " + Features["HandOnHead_Right"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("SpineForward" + " " + Features["SpineForward"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("SpineBackward" + " " + Features["SpineBackward"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("ShouldersForward" + " " + Features["ShouldersForward"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("ShouldersRaised" + " " + Features["ShouldersRaised"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("ArmsAtTrunk" + " " + Features["ArmsAtTrunk"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("ArmsRaisedShoulder" + " " + Features["ArmsRaisedShoulder"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("CrossedArms" + " " + Features["CrossedArms"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("ArmsRaisedUp" + " " + Features["ArmsRaisedUp"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("ArmsExtendedDown" + " " + Features["ArmsExtendedDown"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HandsBehindHead" + " " + Features["HandsBehindHead"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HandOnNeck_Left" + " " + Features["HandOnNeck_Left"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HandOnNeck_Right" + " " + Features["HandOnNeck_Right"].ToString("0.000") + Environment.NewLine);
+                            await dataWriter.StoreAsync();
+                            await outputStream.FlushAsync();
+                        }
+                         
+                    }
+                    stream.Dispose(); // Or use the stream variable (see previous code snippet) with a using statement as well.
+                   
+                   /*
+                   
+                    await FileIO.AppendTextAsync(testFile, timestamp.ToString() + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HeadBackward" + " " + Features["HeadBackward"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HeadBentForward" + " " + Features["HeadBentForward"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HeadOnHand_Left" + " " + Features["HeadOnHand_Left"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HeadOnHand_Right" + " " + Features["HeadOnHand_Right"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HandOnHead_Left" + " " + Features["HandOnHead_Left"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HandOnHead_Right" + " " + Features["HandOnHead_Right"].ToString("0.000") + Environment.NewLine); 
+                    await FileIO.AppendTextAsync(testFile, "SpineForward" + " " + Features["SpineForward"].ToString("0.000") + Environment.NewLine); 
+                    await FileIO.AppendTextAsync(testFile, "SpineBackward" + " " + Features["SpineBackward"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "ShouldersForward" + " " + Features["ShouldersForward"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "ShouldersRaised" + " " + Features["ShouldersRaised"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "ArmsAtTrunk" + " " + Features["ArmsAtTrunk"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "ArmsRaisedShoulder" + " " + Features["ArmsRaisedShoulder"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "CrossedArms" + " " + Features["CrossedArms"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "ArmsRaisedUp" + " " + Features["ArmsRaisedUp"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "ArmsExtendedDown" + " " + Features["ArmsExtendedDown"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HandsBehindHead" + " " + Features["HandsBehindHead"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HandOnNeck_Left" + " " + Features["HandOnNeck_Left"].ToString("0.000") + Environment.NewLine);
+                    await FileIO.AppendTextAsync(testFile, "HandOnNeck_Right" + " " + Features["HandOnNeck_Right"].ToString("0.000") + Environment.NewLine);  
+                    
+                     */
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error 11 - Writing on file " + ex.ToString());
+                }
+                
             }
             catch (Exception ex)
             {
@@ -581,9 +645,11 @@ namespace Kinect2Sample
                 sem.Release();
             }
         }
-        
 
-        private async void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
+
+
+        //what to do once a gesture's confidence is modified
+        private void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             GestureResultView result = sender as GestureResultView;
 
@@ -592,25 +658,27 @@ namespace Kinect2Sample
             this.GestureVisual2.Opacity = 1;
             this.GestureVisual3.Opacity = 1;
 
-            
-
-            switch (result.GestureName)
-            {
-                case "HeadBentForward":
-                    this.GestureVisual0.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
-                    s.set_headForward(result.Confidence);
-                    break;
-
-                case "SpineForward":
-                    this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
-                    s.set_SpineForward(result.Confidence);
-                    break;
-            }
-
-            this.GestureVisual2.Text = "Collapsed body: " + s.get_collapsedBody().ToString("0.000");
-            this.GestureVisual3.Text = "You are " + s.get_Sadness() + " % sad.";
-            
+          //  System.Diagnostics.Debug.WriteLine(result.GestureName);
+            Features[result.GestureName] = result.Confidence;
         }
+            //switch (result.GestureName)
+           // {
+             //   case "HeadBentForward":
+            //        this.GestureVisual0.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
+            ///        s.set_headForward(result.Confidence);
+           //         break;
+           //
+           //     case "SpineForward":
+          //          this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
+          //          s.set_SpineForward(result.Confidence);
+          //          break;
+         //   }
+        //    }
+
+        //    this.GestureVisual2.Text = "Collapsed body: " + s.get_collapsedBody().ToString("0.000");
+         //   this.GestureVisual3.Text = "You are " + s.get_Sadness() + " % sad.";
+            
+        //}
 
         //Checks if the Kinect is connected
         private void Sensor_IsAvailableChanged(KinectSensor sender, IsAvailableChangedEventArgs args)
@@ -618,6 +686,7 @@ namespace Kinect2Sample
             this.StatusText = this.kinectSensor.IsAvailable ?
                  "Running" : "Not Available";
         }
+
 
         private void SetupCurrentDisplay(DisplayFrameType newDisplayFrameType)
         {

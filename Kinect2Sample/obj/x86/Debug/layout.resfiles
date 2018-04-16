@@ -7,6 +7,7 @@ Kinect2Sample.xr.xml
 MainPage.xbf
 Microsoft.Kinect.Xaml.Controls\SpriteSheet.xbf
 Microsoft.Kinect.Xaml.Controls\Themes\Generic.xbf
+Database\AllGestures.gbd
 Database\Crossed Arms.gbd
 Database\Gestures.gbd
 Database\Sad.gbd

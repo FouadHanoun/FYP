@@ -154,6 +154,9 @@
     <Content Include="Database\Sad.gbd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Database\AllGestures.gbd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Kinect2Sample_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
