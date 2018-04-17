@@ -28,8 +28,12 @@ namespace Kinect2Sample
 
     {
         private double[] features = new double[3];
-        Sadness s = new Sadness();  //instance de l'emotion
+
         private Dictionary<string, float> Features = new Dictionary<string, float>();
+        List<string> featuresList = new List<string>(new string[] { "HeadBackward", "HeadBentForward", "HeadOnHand_Left","HeadOnHand_Right",
+                "HandOnHead_Left", "HandOnHead_Right","SpineForward","SpineBackward","ShouldersForward","ShouldersRaised",
+                "ArmsAtTrunk","ArmsRaisedShoulder","HandsOnKnees","CrossedArms","ArmsRaisedUp","ArmsExtendedDown","HandsBehindHead","HandOnNeck_Left","HandOnNeck_Right" });
+
         SemaphoreSlim sem = new SemaphoreSlim(1);  //semaphore pr l'ecriture
         DateTime CurrentDate = DateTime.Now; //reference for the timestamps
 
@@ -97,7 +101,6 @@ namespace Kinect2Sample
         ///there will be one detector created for each potential body
         /// (max of 6) </summary>
         private List<GestureDetector> gestureDetectorList = null;
-        public bool isTakingScreenshot = false;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public string StatusText
@@ -303,7 +306,6 @@ namespace Kinect2Sample
         }
 
 
-
         private void ShowDepthFrame(DepthFrame depthFrame)
         {
             bool depthFrameProcessed = false;
@@ -375,26 +377,13 @@ namespace Kinect2Sample
         {
 
             CreateFolder();
+            
+            foreach (var feature in featuresList)
+            {
+                Features.Add(feature, 0.0f);
+            }
+            
 
-            Features.Add("HeadBackward", 0.0f);
-            Features.Add("HeadBentForward", 0.0f);
-            Features.Add("HeadOnHand_Left", 0.0f);
-            Features.Add("HeadOnHand_Right", 0.0f);
-            Features.Add("HandOnHead_Left", 0.0f);
-            Features.Add("HandOnHead_Right", 0.0f);
-            Features.Add("SpineForward", 0.0f);
-            Features.Add("SpineBackward", 0.0f);
-            Features.Add("ShouldersForward", 0.0f);
-            Features.Add("ShouldersRaised", 0.0f);
-            Features.Add("ArmsAtTrunk", 0.0f);
-            Features.Add("ArmsRaisedShoulder", 0.0f);
-            Features.Add("HandsOnKnees", 0.0f);
-            Features.Add("CrossedArms", 0.0f);
-            Features.Add("ArmsRaisedUp", 0.0f);
-            Features.Add("ArmsExtendedDown", 0.0f);
-            Features.Add("HandsBehindHead", 0.0f);
-            Features.Add("HandOnNeck_Left", 0.0f);
-            Features.Add("HandOnNeck_Right", 0.0f);
             // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
@@ -581,6 +570,12 @@ namespace Kinect2Sample
                         using (var dataWriter = new DataWriter(outputStream))
                         {
                             dataWriter.WriteString(timestamp.ToString() + Environment.NewLine);
+                            foreach (var feature in Features)
+                            {
+                                dataWriter.WriteString(feature.Key + " " + feature.Value.ToString("0.000") + Environment.NewLine);
+                            }
+
+                           /* 
                             dataWriter.WriteString("HeadBackward" + " " + Features["HeadBackward"].ToString("0.000") + Environment.NewLine);
                             dataWriter.WriteString("HeadBentForward" + " " + Features["HeadBentForward"].ToString("0.000") + Environment.NewLine);
                             dataWriter.WriteString("HeadOnHand_Left" + " " + Features["HeadOnHand_Left"].ToString("0.000") + Environment.NewLine);
@@ -598,7 +593,7 @@ namespace Kinect2Sample
                             dataWriter.WriteString("ArmsExtendedDown" + " " + Features["ArmsExtendedDown"].ToString("0.000") + Environment.NewLine);
                             dataWriter.WriteString("HandsBehindHead" + " " + Features["HandsBehindHead"].ToString("0.000") + Environment.NewLine);
                             dataWriter.WriteString("HandOnNeck_Left" + " " + Features["HandOnNeck_Left"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HandOnNeck_Right" + " " + Features["HandOnNeck_Right"].ToString("0.000") + Environment.NewLine);
+                            dataWriter.WriteString("HandOnNeck_Right" + " " + Features["HandOnNeck_Right"].ToString("0.000") + Environment.NewLine); */
                             await dataWriter.StoreAsync();
                             await outputStream.FlushAsync();
                         }
@@ -652,13 +647,10 @@ namespace Kinect2Sample
         private void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             GestureResultView result = sender as GestureResultView;
-
-            this.GestureVisual0.Opacity = 1;
-            this.GestureVisual1.Opacity = 1;
-            this.GestureVisual2.Opacity = 1;
-            this.GestureVisual3.Opacity = 1;
-
-          //  System.Diagnostics.Debug.WriteLine(result.GestureName);
+           // this.GestureVisual0.Opacity = 1;
+          //  this.GestureVisual1.Opacity = 1;
+           // this.GestureVisual2.Opacity = 1;
+         //   this.GestureVisual3.Opacity = 1;
             Features[result.GestureName] = result.Confidence;
         }
             //switch (result.GestureName)
@@ -841,10 +833,14 @@ namespace Kinect2Sample
                             this.gestureDetectorList[i].IsPaused = trackingId == 0;
                         }
                     }
-
-                    //logging in case there's a detected body
-                    await log();
-
+                    if (bodiesManager != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MAIN: " + bodiesManager.is_Tracked());
+                    }
+                    if (bodiesManager != null && bodiesManager.is_Tracked())
+                    {
+                        await log();
+                    }
                 }
             }
         }

@@ -14,6 +14,7 @@ namespace Kinect2Sample
 {
     public class BodiesManager
     {
+        
         /// <summary>
         /// Radius of drawn hand circles
         /// </summary>
@@ -66,6 +67,12 @@ namespace Kinect2Sample
         /// List of colors for each body tracked
         /// </summary>
         private List<Color> bodyColors;
+
+        private bool tracked = false;
+        public bool is_Tracked()
+        {
+            return this.tracked;
+        }
 
         private int BodyCount
         {
@@ -215,11 +222,14 @@ namespace Kinect2Sample
                     this.UpdateBody(body, bodyIndex);
 
                     hasTrackedBody = true;
+
+                    tracked = true;
                 }
                 else
                 {
                     // collapse this body from canvas as it goes out of view
                     this.ClearBody(bodyIndex);
+                    
                 }
             }
 
@@ -327,6 +337,8 @@ namespace Kinect2Sample
             // only draw if joint is tracked or inferred
             if (trackingState != TrackingState.NotTracked)
             {
+                //To let know if a body was tracked
+
                 if (trackingState == TrackingState.Tracked)
                 {
                     ellipse.Fill = new SolidColorBrush(Colors.Green);
