@@ -543,7 +543,7 @@ namespace Kinect2Sample
             try
             {
                 StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Test Folder", CreationCollisionOption.OpenIfExists);
-                StorageFile testFile = await storageFolder.CreateFileAsync("sample.txt", CreationCollisionOption.OpenIfExists);
+                StorageFile testFile = await storageFolder.CreateFileAsync("sample.txt", CreationCollisionOption.ReplaceExisting);
             }
             catch (Exception ex)
             {
@@ -647,10 +647,6 @@ namespace Kinect2Sample
         private void GestureResult_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             GestureResultView result = sender as GestureResultView;
-           // this.GestureVisual0.Opacity = 1;
-          //  this.GestureVisual1.Opacity = 1;
-           // this.GestureVisual2.Opacity = 1;
-         //   this.GestureVisual3.Opacity = 1;
             Features[result.GestureName] = result.Confidence;
         }
             //switch (result.GestureName)
@@ -833,15 +829,13 @@ namespace Kinect2Sample
                             this.gestureDetectorList[i].IsPaused = trackingId == 0;
                         }
                     }
-                    if (bodiesManager != null)
-                    {
-                        System.Diagnostics.Debug.WriteLine("MAIN: " + bodiesManager.is_Tracked());
-                    }
+                    
                     if (bodiesManager != null && bodiesManager.is_Tracked())
                     {
                         await log();
                     }
                 }
+                this.GestureVisual0.Text = (DateTime.Now - CurrentDate).ToString();
             }
         }
 
