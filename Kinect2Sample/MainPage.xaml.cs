@@ -30,6 +30,8 @@ namespace Kinect2Sample
         private double[] features = new double[3];
 
         private Dictionary<string, float> Features = new Dictionary<string, float>();
+
+        //list of the features learned, to be used for the logging
         List<string> featuresList = new List<string>(new string[] { "HeadBackward", "HeadBentForward", "HeadOnHand_Left","HeadOnHand_Right",
                 "HandOnHead_Left", "HandOnHead_Right","SpineForward","SpineBackward","ShouldersForward","ShouldersRaised",
                 "ArmsAtTrunk","ArmsRaisedShoulder","HandsOnKnees","CrossedArms","ArmsRaisedUp","ArmsExtendedDown","HandsBehindHead","HandOnNeck_Left","HandOnNeck_Right" });
@@ -575,55 +577,13 @@ namespace Kinect2Sample
                                 dataWriter.WriteString(feature.Key + " " + feature.Value.ToString("0.000") + Environment.NewLine);
                             }
 
-                           /* 
-                            dataWriter.WriteString("HeadBackward" + " " + Features["HeadBackward"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HeadBentForward" + " " + Features["HeadBentForward"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HeadOnHand_Left" + " " + Features["HeadOnHand_Left"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HeadOnHand_Right" + " " + Features["HeadOnHand_Right"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HandOnHead_Left" + " " + Features["HandOnHead_Left"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HandOnHead_Right" + " " + Features["HandOnHead_Right"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("SpineForward" + " " + Features["SpineForward"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("SpineBackward" + " " + Features["SpineBackward"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("ShouldersForward" + " " + Features["ShouldersForward"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("ShouldersRaised" + " " + Features["ShouldersRaised"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("ArmsAtTrunk" + " " + Features["ArmsAtTrunk"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("ArmsRaisedShoulder" + " " + Features["ArmsRaisedShoulder"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("CrossedArms" + " " + Features["CrossedArms"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("ArmsRaisedUp" + " " + Features["ArmsRaisedUp"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("ArmsExtendedDown" + " " + Features["ArmsExtendedDown"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HandsBehindHead" + " " + Features["HandsBehindHead"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HandOnNeck_Left" + " " + Features["HandOnNeck_Left"].ToString("0.000") + Environment.NewLine);
-                            dataWriter.WriteString("HandOnNeck_Right" + " " + Features["HandOnNeck_Right"].ToString("0.000") + Environment.NewLine); */
                             await dataWriter.StoreAsync();
                             await outputStream.FlushAsync();
                         }
                          
                     }
-                    stream.Dispose(); // Or use the stream variable (see previous code snippet) with a using statement as well.
+                    stream.Dispose(); 
                    
-                   /*
-                   
-                    await FileIO.AppendTextAsync(testFile, timestamp.ToString() + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HeadBackward" + " " + Features["HeadBackward"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HeadBentForward" + " " + Features["HeadBentForward"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HeadOnHand_Left" + " " + Features["HeadOnHand_Left"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HeadOnHand_Right" + " " + Features["HeadOnHand_Right"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HandOnHead_Left" + " " + Features["HandOnHead_Left"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HandOnHead_Right" + " " + Features["HandOnHead_Right"].ToString("0.000") + Environment.NewLine); 
-                    await FileIO.AppendTextAsync(testFile, "SpineForward" + " " + Features["SpineForward"].ToString("0.000") + Environment.NewLine); 
-                    await FileIO.AppendTextAsync(testFile, "SpineBackward" + " " + Features["SpineBackward"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "ShouldersForward" + " " + Features["ShouldersForward"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "ShouldersRaised" + " " + Features["ShouldersRaised"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "ArmsAtTrunk" + " " + Features["ArmsAtTrunk"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "ArmsRaisedShoulder" + " " + Features["ArmsRaisedShoulder"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "CrossedArms" + " " + Features["CrossedArms"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "ArmsRaisedUp" + " " + Features["ArmsRaisedUp"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "ArmsExtendedDown" + " " + Features["ArmsExtendedDown"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HandsBehindHead" + " " + Features["HandsBehindHead"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HandOnNeck_Left" + " " + Features["HandOnNeck_Left"].ToString("0.000") + Environment.NewLine);
-                    await FileIO.AppendTextAsync(testFile, "HandOnNeck_Right" + " " + Features["HandOnNeck_Right"].ToString("0.000") + Environment.NewLine);  
-                    
-                     */
                 }
                 catch (Exception ex)
                 {
@@ -649,24 +609,6 @@ namespace Kinect2Sample
             GestureResultView result = sender as GestureResultView;
             Features[result.GestureName] = result.Confidence;
         }
-            //switch (result.GestureName)
-           // {
-             //   case "HeadBentForward":
-            //        this.GestureVisual0.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
-            ///        s.set_headForward(result.Confidence);
-           //         break;
-           //
-           //     case "SpineForward":
-          //          this.GestureVisual1.Text = result.GestureName + ": " + result.Confidence.ToString("0.000");
-          //          s.set_SpineForward(result.Confidence);
-          //          break;
-         //   }
-        //    }
-
-        //    this.GestureVisual2.Text = "Collapsed body: " + s.get_collapsedBody().ToString("0.000");
-         //   this.GestureVisual3.Text = "You are " + s.get_Sadness() + " % sad.";
-            
-        //}
 
         //Checks if the Kinect is connected
         private void Sensor_IsAvailableChanged(KinectSensor sender, IsAvailableChangedEventArgs args)
@@ -835,7 +777,7 @@ namespace Kinect2Sample
                         await log();
                     }
                 }
-                this.GestureVisual0.Text = (DateTime.Now - CurrentDate).ToString();
+                this.GestureVisual1.Text = (DateTime.Now - CurrentDate).ToString();
             }
         }
 

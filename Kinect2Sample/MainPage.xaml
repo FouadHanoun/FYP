@@ -92,7 +92,7 @@
         </ScrollViewer>
             <TextBlock x:Name="GestureVisual0"
 	            Grid.Row="1"
-	            Text="Head Bent forward"
+	            Text="Tracking..."
                 Margin="0 0 8 0" 
 	            FontSize="30"
 	            Foreground="White"
@@ -108,28 +108,9 @@
 	            Foreground="White"
 	            HorizontalAlignment="Right"
 	VerticalAlignment="Top"
-	Opacity="0">
+	Opacity="1">
             </TextBlock>
-            <TextBlock x:Name="GestureVisual2"
-	            Grid.Row="1"
-	            Text="Collapsed Body"
-                Margin="0 60 0 0 " 
-	            FontSize="30"
-	            Foreground="White"
-	            HorizontalAlignment="Right"
-	VerticalAlignment="Top"
-	Opacity="0">
-            </TextBlock>
-            <TextBlock x:Name="GestureVisual3"
-	            Grid.Row="1"
-	            Text=""
-                Margin="0 90 0 0 " 
-	            FontSize="30"
-	            Foreground="White"
-	            HorizontalAlignment="Right"
-	VerticalAlignment="Top"
-	Opacity="0">
-            </TextBlock>
+
         </Grid>
     </Grid>
 </Page>
